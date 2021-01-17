@@ -1,14 +1,25 @@
 import 'dart:collection';
 
+import 'package:flutter/foundation.dart';
+
+import 'ingredient.dart';
+
 class Recipe {
   String name;
-  HashMap<Ingredient, IngredientQuantity> ingredients;
 
-  Recipe();
+  List<Ingredient> ingredients = [Ingredient('Cheese'), Ingredient('Egg')];
+
+  HashMap<String, IngredientQuantity> ingredientQuantities;
+
+  Recipe(this.name);
 }
 
-class IngredientQuantity {}
+class RecipeListModel extends ChangeNotifier {
+  List<Recipe> recipeList = [];
 
-class Ingredient {
-  String name;
+  void addRecipe(Recipe newRecipe) {
+    // Add ingredients into ingredientList
+    recipeList.add(newRecipe);
+    notifyListeners();
+  }
 }
