@@ -1,13 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:string_similarity/string_similarity.dart';
 
-class IngredientQuantity {}
-
 class Ingredient {
   final String name;
+  final IngredientType type;
 
-  Ingredient(this.name);
+  Ingredient(this.name, this.type);
 }
+
+enum IngredientType { Volume, Mass, Unit }
 
 class IngredientListModel extends ChangeNotifier {
   static List<Ingredient> knownIngredients = [];

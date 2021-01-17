@@ -55,7 +55,7 @@ class _MainScreenState extends State<MainScreen> {
 
           enableAddition = true;
           action = () {
-            Navigator.pushNamed(context, NewIngredientScreen.routeName);
+            Navigator.pushNamed(context, NewIngredientState.routeName);
           };
 
           var ingredientList = IngredientListModel.knownIngredients;

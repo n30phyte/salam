@@ -44,8 +44,7 @@ class NewRecipeScreen extends StatelessWidget {
     return DefaultTabController(
         length: 2,
         child: Scaffold(
-            appBar: AppBar(
-                title: Text('New Recipe'), bottom: TabBar(tabs: [Tab(text: 'Ingredients'), Tab(text: 'Directions')])),
+            appBar: RenameAppBarState('New Recipe'),
             body: TabBarView(children: [
               Center(
                 child: Padding(
@@ -71,9 +70,50 @@ class NewRecipeScreen extends StatelessWidget {
               TextField(
                 controller: ingredientController,
                 onSubmitted: (text) {
-                  ingredientList.add(Ingredient(text));
+                  ingredientList.add(Ingredient(text, IngredientType.Unit));
                 },
               )
             ])));
+  }
+}
+
+class RenameAppBarState extends StatefulWidget implements PreferredSizeWidget {
+  final String defaultText;
+
+  RenameAppBarState(this.defaultText);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _RenameAppBarWidget(defaultText);
+  }
+
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+}
+
+class _RenameAppBarWidget extends State<RenameAppBarState> {
+  String appBarText;
+
+  _RenameAppBarWidget(this.appBarText);
+
+  @override
+  Widget build(BuildContext context) {
+    var _textFieldController = TextEditingController();
+
+    return GestureDetector(
+      child: AppBar(title: Text(appBarText), bottom: TabBar(tabs: [Tab(text: 'Ingredients'), Tab(text: 'Directions')])),
+      onDoubleTap: () {
+        AlertDialog(
+            title: Text('Please enter the name of the recipe'),
+            content: TextField(
+              onChanged: (String value) {
+                setState(() {
+                  appBarText = value;
+                });
+              },
+              controller: _textFieldController,
+            ));
+      },
+    );
   }
 }

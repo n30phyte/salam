@@ -28,7 +28,7 @@ class App extends StatelessWidget {
         routes: {
           MainScreen.routeName: (context) => MainScreen(),
           NewRecipeScreen.routeName: (context) => NewRecipeScreen(),
-          NewIngredientScreen.routeName: (context) => NewIngredientScreen(),
+          NewIngredientState.routeName: (context) => NewIngredientState(),
         });
   }
 }
