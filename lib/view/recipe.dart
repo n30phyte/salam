@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-import '../model/ingredient.dart';
 import '../model/recipe.dart';
 
 class RecipeDetailsScreen extends StatelessWidget {
@@ -32,14 +30,22 @@ class RecipeDetailsScreen extends StatelessWidget {
   }
 }
 
-class NewRecipeScreen extends StatelessWidget {
+class NewRecipeScreen extends StatefulWidget {
   static const routeName = '/recipe/new';
 
   @override
-  Widget build(BuildContext context) {
-    var ingredientList = <Ingredient>[];
+  State<StatefulWidget> createState() {
+    return _NewRecipeScreen();
+  }
+}
 
-    final ingredientController = TextEditingController();
+class _NewRecipeScreen extends State<NewRecipeScreen> {
+  var ingredientList = <String>[];
+  var stepsList = <String>[];
+
+  @override
+  Widget build(BuildContext context) {
+    final stepController = TextEditingController();
 
     return DefaultTabController(
         length: 2,
@@ -48,30 +54,53 @@ class NewRecipeScreen extends StatelessWidget {
             body: TabBarView(children: [
               Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Form(
-                      child: Column(children: <Widget>[
-                    TypeAheadFormField(
-                      textFieldConfiguration: TextFieldConfiguration(
-                          controller: ingredientController, decoration: InputDecoration(labelText: 'Ingredient Name')),
-                      suggestionsCallback: (text) {
-                        return IngredientListModel.getSuggestions(text);
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
+                        if (index >= ingredientList.length) {
+                          var _controller = TextEditingController();
+                          Widget widget = TextField(
+                            controller: _controller,
+                            decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                    icon: Icon(Icons.add_circle),
+                                    onPressed: () {
+                                      setState(() {
+                                        if (ingredientList.length <= index) {
+                                          ingredientList.add(_controller.text);
+                                        }
+                                      });
+                                    })),
+                          );
+                          return widget;
+                        } else {
+                          var _controller = TextEditingController(text: ingredientList[index]);
+                          Widget widget = TextField(
+                            controller: _controller,
+                            decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                    icon: Icon(Icons.remove_circle),
+                                    onPressed: () {
+                                      setState(() {
+                                        ingredientList.removeAt(index);
+                                      });
+                                    })),
+                          );
+                          return widget;
+                        }
                       },
-                      itemBuilder: (context, String suggestion) {
-                        return ListTile(title: Text(suggestion));
-                      },
-                      onSuggestionSelected: (String suggestion) {
-                        ingredientController.text = suggestion;
-                      },
-                    )
-                  ])),
-                ),
+                      itemCount: ingredientList.length + 1,
+                    )),
               ),
-              TextField(
-                controller: ingredientController,
-                onSubmitted: (text) {
-                  ingredientList.add(Ingredient(text, IngredientType.Unit));
-                },
+              Center(
+                child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: stepController,
+                      onSubmitted: (text) {
+                        stepsList.add(text);
+                      },
+                    )),
               )
             ])));
   }
