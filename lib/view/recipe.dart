@@ -1,48 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
+import '../model/ingredient.dart';
 import '../model/recipe.dart';
-
-class RecipeListScreen extends StatelessWidget {
-  static const String routeName = '/';
-
-  @override
-  Widget build(BuildContext context) {
-    List<Recipe> recipeList;
-
-    context.select((RecipeListModel rlm) => recipeList = rlm.recipeList);
-
-    return Scaffold(
-        appBar: AppBar(title: Text('Recipes')),
-        endDrawerEnableOpenDragGesture: true,
-        drawer: SafeArea(
-            child: Drawer(
-                child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            ListTile(title: Text('Recipes'), onTap: () {}),
-            ListTile(title: Text('Ingredients'), onTap: () {}),
-            ListTile(title: Text('Shopping List'), onTap: () {})
-          ],
-        ))),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              Navigator.pushNamed(context, NewRecipeScreen.routeName);
-            },
-            child: Icon(Icons.add),
-            elevation: 2.0),
-        body: ListView(children: [
-          for (var recipe in recipeList)
-            ListTile(
-                title: Text(recipe.name),
-                onTap: () {
-                  Navigator.pushNamed(context, RecipeDetailsScreen.routeName, arguments: recipe);
-                })
-        ]));
-  }
-}
 
 class RecipeDetailsScreen extends StatelessWidget {
   static const routeName = '/recipe/view';
@@ -76,7 +37,7 @@ class NewRecipeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var ingredientList = [];
+    var ingredientList = <Ingredient>[];
 
     final ingredientController = TextEditingController();
 
@@ -86,13 +47,32 @@ class NewRecipeScreen extends StatelessWidget {
             appBar: AppBar(
                 title: Text('New Recipe'), bottom: TabBar(tabs: [Tab(text: 'Ingredients'), Tab(text: 'Directions')])),
             body: TabBarView(children: [
-              TextField(
-                controller: ingredientController,
-                onSubmitted: (text) {},
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Form(
+                      child: Column(children: <Widget>[
+                    TypeAheadFormField(
+                      textFieldConfiguration: TextFieldConfiguration(
+                          controller: ingredientController, decoration: InputDecoration(labelText: 'Ingredient Name')),
+                      suggestionsCallback: (text) {
+                        return IngredientListModel.getSuggestions(text);
+                      },
+                      itemBuilder: (context, String suggestion) {
+                        return ListTile(title: Text(suggestion));
+                      },
+                      onSuggestionSelected: (String suggestion) {
+                        ingredientController.text = suggestion;
+                      },
+                    )
+                  ])),
+                ),
               ),
               TextField(
                 controller: ingredientController,
-                onSubmitted: (text) {},
+                onSubmitted: (text) {
+                  ingredientList.add(Ingredient(text));
+                },
               )
             ])));
   }

@@ -27,6 +27,8 @@ dependencies:
   provider: ^4.3.0
   shared_preferences: '>=0.5.12+4 <2.0.0'
   international_system_of_units: 1.0.0-dev.4
+  flutter_typeahead: ^2.0.0
+  string_similarity: ^1.1.0
 
   google_fonts: ^1.1.0
   cupertino_icons: ^1.0.0
