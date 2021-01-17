@@ -3,9 +3,8 @@ import 'package:string_similarity/string_similarity.dart';
 
 class Ingredient {
   final String name;
-  final IngredientType type;
 
-  Ingredient(this.name, this.type);
+  Ingredient(this.name);
 }
 
 enum IngredientType { Volume, Mass, Unit }

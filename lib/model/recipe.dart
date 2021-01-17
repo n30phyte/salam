@@ -7,7 +7,7 @@ import 'ingredient.dart';
 class Recipe {
   String name;
 
-  List<Ingredient> ingredients = [Ingredient('Cheese', IngredientType.Mass), Ingredient('Egg', IngredientType.Unit)];
+  List<Ingredient> ingredients = [Ingredient('Cheese'), Ingredient('Egg')];
 
   HashMap<String, double> ingredientQuantities;
 
